@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather SMS</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+ 
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="form-container">
+            <h1 class="text-center mb-4">Weather SMS</h1>
+            <form id="weatherForm" class="needs-validation" novalidate>
+                <div class="form-group">
+                    <label for="name"></label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
+                    <div class="invalid-feedback">Please enter your name.</div>
+                </div>
+                <div class="form-group">
+                    <label for="city"></label>
+                    <input type="text" class="form-control" id="city" name="city" placeholder="City" required>
+                    <div class="invalid-feedback">Please enter a city.</div>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number"></label>
+                    <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Phone Number" required>
+                    <div class="invalid-feedback">Please enter a phone number.</div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JavaScript and dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+
+        // Form submission handling
+        document.getElementById('weatherForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(this);
+
+            fetch('/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(`Success: ${data.message}`);
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An unexpected error occurred.');
+            });
+        });
+    </script>
+</body>
+</html>
